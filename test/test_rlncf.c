@@ -233,3 +233,51 @@ void test_rlncf_should_not_rotate_to_left_without_carry_and_throw_exception_on_i
 	
 	TEST_ASSERT_EQUAL_HEX8(0xA5,FSR[code.operand1]);
 }
+
+void test_rlncf_should_rotate_to_left_without_carry_with_valid_operand1_and_operand2_is_ACCESS(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	//OP3 should be empty if OP2 is written as ACCESS OR BANKED
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x57,
+					 .operand2 = ACCESS,
+					 .operand3 = -1
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xCB	- 1100 1011	
+	//After rotate to left, become 1001 0111 - 97
+	FSR[code.operand1] = 0xCB;
+	
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1, errorStatus);
+	}
+
+	TEST_ASSERT_EQUAL_HEX8(0x97,FSR[WREG]);
+
+}
+
+void test_rlncf_should_rotate_to_left_without_carry_with_valid_operand1_and_operand2_is_BANKED(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	//OP3 should be empty if OP2 is written as ACCESS OR BANKED
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x59,
+					 .operand2 = BANKED,
+					 .operand3 = -1
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xCB	- 1011 1100
+	//After rotate to left, become 0111 1001 - 79
+	FSR[code.operand1] = 0xBC;
+	
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1, errorStatus);
+	}
+
+	TEST_ASSERT_EQUAL_HEX8(0x79,FSR[code.operand1]);
+
+}
