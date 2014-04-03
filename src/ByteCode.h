@@ -11,7 +11,8 @@ typedef enum {
 typedef enum { NO_ERROR,
 			   ERR_INVALID_OPERAND1,
 			   ERR_INVALID_OPERAND2,
-			   ERR_INVALID_OPERAND3
+			   ERR_INVALID_OPERAND3,
+			   ERR_INVALID_BSR
 } ExceptionError;
 
 typedef enum { MOVWF,
