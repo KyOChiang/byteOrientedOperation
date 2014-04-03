@@ -9,4 +9,4 @@ extern char FSR[];
 
 void rlncf(Bytecode *code);
 
-#endif // _MOVWF_H_
+#endif // RLNCF_H_

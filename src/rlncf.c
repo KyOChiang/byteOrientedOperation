@@ -33,39 +33,99 @@ void rlncf(Bytecode *code){
 		//If bit 7 is 1, the value will read as negative value
 		if(FSR[code->operand1]<0){
 			if(code->operand2 == F||code->operand2 == 1||code->operand2 == -1){
-				if(code->operand3 == BANKED||code->operand3 == -4||code->operand3 == -1)
+				if(code->operand3 == BANKED||code->operand3 == -4||code->operand3 == -1){
 					FSR[code->operand1+(FSR[BSR]<<8)] = (FSR[code->operand1]<<1) + 0x01;
+					if(FSR[code->operand1+(FSR[BSR]<<8)] < 0)
+						FSR[STATUS] = 0x10;
+					else if(FSR[code->operand1+(FSR[BSR]<<8)] == 0)
+						FSR[STATUS] = 0x04;
+				}
 				else if(code->operand3 == ACCESS||code->operand3 == -5){
-					if(code->operand1>=0x80)
+					if(code->operand1>=0x80){
 						FSR[code->operand1+0xF00] = (FSR[code->operand1]<<1) + 0x01;
-					if(code->operand1<0x80)
+						if(FSR[code->operand1+0xF00] < 0)
+							FSR[STATUS] = 0x10;
+						else if(FSR[code->operand1+0xF00] == 0)
+							FSR[STATUS] = 0x04;
+					}
+					if(code->operand1<0x80){
 						FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x01;
+						if(FSR[code->operand1] < 0)
+							FSR[STATUS] = 0x10;
+						else if(FSR[code->operand1] == 0)
+							FSR[STATUS] = 0x04;
+					}
 				}
 			}
-			else if(code->operand2 == W||code->operand2 == 0)
+			else if(code->operand2 == W||code->operand2 == 0){
 				FSR[WREG] = (FSR[code->operand1]<<1) + 0x01;
-			else if(code->operand2 == ACCESS)
+				if(FSR[WREG] < 0)
+					FSR[STATUS] = 0x10;
+				else if(FSR[WREG] == 0)
+					FSR[STATUS] = 0x04;
+			}
+			else if(code->operand2 == ACCESS){
 				FSR[WREG] = (FSR[code->operand1]<<1) + 0x01;
-			else if(code->operand2 == BANKED)
+				if(FSR[WREG] < 0)
+					FSR[STATUS] = 0x10;
+				else if(FSR[WREG] == 0)
+					FSR[STATUS] = 0x04;
+			}
+			else if(code->operand2 == BANKED){
 				FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x01;
+				if(FSR[code->operand1] < 0)
+					FSR[STATUS] = 0x10;
+				else if(FSR[code->operand1] == 0)
+					FSR[STATUS] = 0x04;
+			}
 		}
 		else{
 			if(code->operand2 == F||code->operand2 == 1||code->operand2 == -1){
-				if(code->operand3 == BANKED||code->operand3 == -4||code->operand3 == -1)
+				if(code->operand3 == BANKED||code->operand3 == -4||code->operand3 == -1){
 					FSR[code->operand1+(FSR[BSR]<<8)] = (FSR[code->operand1]<<1) + 0x00;
+					if(FSR[code->operand1+(FSR[BSR]<<8)] < 0)
+						FSR[STATUS] = 0x10;
+					else if(FSR[code->operand1+(FSR[BSR]<<8)] == 0)
+						FSR[STATUS] = 0x04;
+				}
 				else if(code->operand3 == ACCESS||code->operand3 == -5){
-					if(code->operand1>=0x80)
+					if(code->operand1>=0x80){
 						FSR[code->operand1+0xF00] = (FSR[code->operand1]<<1) + 0x00;
-					if(code->operand1<0x80)
+						if(FSR[code->operand1+0xF00] < 0)
+							FSR[STATUS] = 0x10;
+						else if(FSR[code->operand1+0xF00] == 0)
+							FSR[STATUS] = 0x04;
+					}
+					if(code->operand1<0x80){
 						FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x00;
+						if(FSR[code->operand1] < 0)
+							FSR[STATUS] = 0x10;
+						else if(FSR[code->operand1] == 0)
+							FSR[STATUS] = 0x04;
+					}
 				}
 			}
-			else if(code->operand2 == W||code->operand2 == 0)
+			else if(code->operand2 == W||code->operand2 == 0){
 				FSR[WREG] = (FSR[code->operand1]<<1) + 0x00;
-			else if(code->operand2 == ACCESS)
+				if(FSR[WREG] < 0)
+					FSR[STATUS] = 0x10;
+				else if(FSR[WREG] == 0)
+					FSR[STATUS] = 0x04;
+			}
+			else if(code->operand2 == ACCESS){
 				FSR[WREG] = (FSR[code->operand1]<<1) + 0x00;
-			else if(code->operand2 == BANKED)
+				if(FSR[WREG] < 0)
+					FSR[STATUS] = 0x10;
+				else if(FSR[WREG] == 0)
+					FSR[STATUS] = 0x04;
+			}
+			else if(code->operand2 == BANKED){
 				FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x00;
+				if(FSR[code->operand1] < 0)
+					FSR[STATUS] = 0x10;
+				else if(FSR[code->operand1] == 0)
+					FSR[STATUS] = 0x04;
+			}
 		}
 		
 	}
