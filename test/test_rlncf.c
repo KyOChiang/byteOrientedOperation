@@ -281,3 +281,71 @@ void test_rlncf_should_rotate_to_left_without_carry_with_valid_operand1_and_oper
 	TEST_ASSERT_EQUAL_HEX8(0x79,FSR[code.operand1]);
 
 }
+
+void test_rlncf_should_not_rotate_to_left_without_carry_and_throw_exception_on_invalid_BSR(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x22,
+					 .operand2 = F,
+					 .operand3 = BANKED
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xA4	- 1010 0101	
+	FSR[code.operand1] = 0xA5;
+	FSR[BSR] = 0x10;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_BSR, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xA5,FSR[code.operand1]);
+}
+
+void test_rlncf_should_rotate_to_left_without_carry_and_store_to_selected_BSR_FileREG(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x22,
+					 .operand2 = F,
+					 .operand3 = BANKED
+					};
+					
+	//Initialize FSR[code.operand1] with value 0x96	- 1001 0110
+	//After rotate to left, become 0010 1101 - 2D
+	FSR[code.operand1] = 0x96;
+	FSR[BSR] = 0x01;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_BSR, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0x2D,FSR[code.operand1+(FSR[BSR]<<8)]);
+}
+
+void test_rlncf_should_rotate_to_left_without_carry_and_store_to_WREG_without_consider_on_BSR(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x63,
+					 .operand2 = W,
+					 .operand3 = BANKED
+					};
+					
+	//Initialize FSR[code.operand1] with value 0x69	- 0110 1001
+	//After rotate to left, become 1101 0010 - D2
+	FSR[code.operand1] = 0x69;
+	FSR[BSR] = 0x03;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_BSR, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xD2,FSR[WREG]);
+}

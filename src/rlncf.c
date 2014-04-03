@@ -15,6 +15,9 @@ char FSR[0x1000];
 
 void rlncf(Bytecode *code){
 
+	if(FSR[BSR] < 0x00 || FSR[BSR] > 0x0F)
+		Throw(ERR_INVALID_BSR);
+		
 	if(code->operand2 == BANKED||code->operand2 == ACCESS||code->operand2 == -4||code->operand2 == -5){
 		if(code->operand3 == BANKED||code->operand3 == ACCESS||code->operand3 == -4||code->operand3 == -5)
 			Throw(ERR_INVALID_OPERAND3);
@@ -30,22 +33,41 @@ void rlncf(Bytecode *code){
 		//If bit 7 is 1, the value will read as negative value
 		if(FSR[code->operand1]<0){
 			if(code->operand2 == F||code->operand2 == 1||code->operand2 == -1){
-				FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x01;
+				if(code->operand3 == BANKED||code->operand3 == -4||code->operand3 == -1)
+					FSR[code->operand1+(FSR[BSR]<<8)] = (FSR[code->operand1]<<1) + 0x01;
+				else if(code->operand3 == ACCESS||code->operand3 == -5){
+					if(code->operand1>=0x80)
+						FSR[code->operand1+0xF00] = (FSR[code->operand1]<<1) + 0x01;
+					if(code->operand1<0x80)
+						FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x01;
+				}
 			}
-			else if(code->operand2 == W||code->operand2 == 0||code->operand2 == ACCESS)
+			else if(code->operand2 == W||code->operand2 == 0)
+				FSR[WREG] = (FSR[code->operand1]<<1) + 0x01;
+			else if(code->operand2 == ACCESS)
 				FSR[WREG] = (FSR[code->operand1]<<1) + 0x01;
 			else if(code->operand2 == BANKED)
 				FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x01;
 		}
 		else{
 			if(code->operand2 == F||code->operand2 == 1||code->operand2 == -1){
-				FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x00;
+				if(code->operand3 == BANKED||code->operand3 == -4||code->operand3 == -1)
+					FSR[code->operand1+(FSR[BSR]<<8)] = (FSR[code->operand1]<<1) + 0x00;
+				else if(code->operand3 == ACCESS||code->operand3 == -5){
+					if(code->operand1>=0x80)
+						FSR[code->operand1+0xF00] = (FSR[code->operand1]<<1) + 0x00;
+					if(code->operand1<0x80)
+						FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x00;
+				}
 			}
-			else if(code->operand2 == W||code->operand2 == 0||code->operand2 == ACCESS)
+			else if(code->operand2 == W||code->operand2 == 0)
+				FSR[WREG] = (FSR[code->operand1]<<1) + 0x00;
+			else if(code->operand2 == ACCESS)
 				FSR[WREG] = (FSR[code->operand1]<<1) + 0x00;
 			else if(code->operand2 == BANKED)
 				FSR[code->operand1] = (FSR[code->operand1]<<1) + 0x00;
 		}
+		
 	}
 	else
 		Throw(ERR_INVALID_OPERAND1);
