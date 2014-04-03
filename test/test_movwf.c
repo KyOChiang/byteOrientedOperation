@@ -50,3 +50,49 @@ void test_movwf_with_file_addr_more_than_0x7F_should_move_content_inside_WREG_to
 	TEST_ASSERT_EQUAL_HEX8(0x45,FSR[code.operand1+(0xF00)]);
 }
 
+void test_movwf_should_throw_an_exception_if_operand2_is_W(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = MOVWF, .name = "movwf"},
+					 .operand1 = 0x23,
+					 .operand2 = W,
+					 .operand3 = -1
+					};
+					
+	//Initialize WREG with value 0x45	
+	FSR[code.operand1] = 0x00;
+	FSR[WREG] = 0x45;
+	
+	Try{
+		movwf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0x00,FSR[code.operand1]);
+}
+
+void test_movwf_should_throw_an_exception_if_operand2_is_F(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = MOVWF, .name = "movwf"},
+					 .operand1 = 0x23,
+					 .operand2 = F,
+					 .operand3 = -1
+					};
+					
+	//Initialize WREG with value 0x45	
+	FSR[code.operand1] = 0x00;
+	FSR[WREG] = 0x45;
+	
+	Try{
+		movwf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0x00,FSR[code.operand1]);
+}
+
