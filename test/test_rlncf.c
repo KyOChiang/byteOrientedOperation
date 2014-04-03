@@ -349,3 +349,25 @@ void test_rlncf_should_rotate_to_left_without_carry_and_store_to_WREG_without_co
 	
 	TEST_ASSERT_EQUAL_HEX8(0xD2,FSR[WREG]);
 }
+
+void test_rlncf_with_op1_more_than_0x7F_should_rotate_to_left_without_carry_and_store_to_BANKF_FileREG(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x89,
+					 .operand2 = F,
+					 .operand3 = ACCESS
+					};
+					
+	//Initialize FSR[code.operand1] with value 0x73	- 0111 0011
+	//After rotate to left, become 1110 0110 - E6
+	FSR[code.operand1] = 0x73;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_BSR, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xE6,FSR[code.operand1+0xF00]);
+}
