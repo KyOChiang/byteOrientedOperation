@@ -107,3 +107,129 @@ void test_rlncf_should_rotate_to_left_without_carry_and_store_inside_WREG(){
 	
 	TEST_ASSERT_EQUAL_HEX8(0x4B,FSR[WREG]);
 }
+
+void test_rlncf_should_not_rotate_to_left_without_carry_and_throw_exception_on_invalid_operand2_3_are_BANKED(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x10,
+					 .operand2 = BANKED,
+					 .operand3 = BANKED
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xA4	- 1010 0101	
+	FSR[code.operand1] = 0xA5;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xA5,FSR[code.operand1]);
+}
+
+void test_rlncf_should_not_rotate_to_left_without_carry_and_throw_exception_on_invalid_operand2_3_are_ACCESS(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x10,
+					 .operand2 = ACCESS,
+					 .operand3 = ACCESS
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xA4	- 1010 0101	
+	FSR[code.operand1] = 0xA5;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xA5,FSR[code.operand1]);
+}
+
+void test_rlncf_should_not_rotate_to_left_without_carry_and_throw_exception_on_invalid_operand2_3_are_ACCESS_BANKED(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x10,
+					 .operand2 = ACCESS,
+					 .operand3 = BANKED
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xA4	- 1010 0101	
+	FSR[code.operand1] = 0xA5;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xA5,FSR[code.operand1]);
+}
+
+void test_rlncf_should_not_rotate_to_left_without_carry_and_throw_exception_on_invalid_operand2_3_are_F(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x10,
+					 .operand2 = F,
+					 .operand3 = F
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xA4	- 1010 0101	
+	FSR[code.operand1] = 0xA5;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND2, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xA5,FSR[code.operand1]);
+}
+
+void test_rlncf_should_not_rotate_to_left_without_carry_and_throw_exception_on_invalid_operand2_3_are_W(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x10,
+					 .operand2 = W,
+					 .operand3 = W
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xA4	- 1010 0101	
+	FSR[code.operand1] = 0xA5;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND2, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xA5,FSR[code.operand1]);
+}
+
+void test_rlncf_should_not_rotate_to_left_without_carry_and_throw_exception_on_invalid_operand2_3_are_W_F(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = RLNCF, .name = "rlncf"},
+					 .operand1 = 0x10,
+					 .operand2 = W,
+					 .operand3 = F
+					};
+					
+	//Initialize FSR[code.operand1] with value 0xA4	- 1010 0101	
+	FSR[code.operand1] = 0xA5;
+	Try{
+		rlncf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND2, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0xA5,FSR[code.operand1]);
+}
