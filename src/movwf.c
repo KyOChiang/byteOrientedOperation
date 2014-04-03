@@ -17,9 +17,15 @@ void movwf(Bytecode *code){
 		}
 	
 	if(code->operand1 > 0x00 && code->operand1 <= 0xFF){
-		if(code->operand2 == BANKED||code->operand2 == 1)
-			FSR[code->operand1+(FSR[BSR]<<8)] = FSR[WREG];
-		else if(code->operand2 == ACCESS||code->operand2 == 0||code->operand2 == -1){
+		if(code->operand2 == BANKED||code->operand2 == 1||code->operand2 == -1){
+			if(code->operand1 == -1){
+				FSR[BSR] = 0x00;
+				FSR[code->operand1+(FSR[BSR]<<8)] = FSR[WREG];
+			}
+			else
+				FSR[code->operand1+(FSR[BSR]<<8)] = FSR[WREG];
+		}
+		else if(code->operand2 == ACCESS||code->operand2 == 0){
 			if(code->operand1>=0x80)
 				FSR[code->operand1+0xF00] = FSR[WREG];
 			if(code->operand1<0x80)

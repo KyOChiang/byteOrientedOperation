@@ -47,7 +47,7 @@ void test_movwf_with_file_addr_more_than_0x7F_should_move_content_inside_WREG_to
 		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1, errorStatus);
 	}
 	
-	TEST_ASSERT_EQUAL_HEX8(0x45,FSR[code.operand1+(0xF00)]);
+	TEST_ASSERT_EQUAL_HEX8(0x45,FSR[code.operand1]);
 }
 
 void test_movwf_should_throw_an_exception_if_operand2_is_W(){
