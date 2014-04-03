@@ -67,7 +67,7 @@ void test_movwf_should_throw_an_exception_if_operand2_is_W(){
 	Try{
 		movwf(&code);
 	}Catch(errorStatus){
-		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND2, errorStatus);
 	}
 	
 	TEST_ASSERT_EQUAL_HEX8(0x00,FSR[code.operand1]);
@@ -90,9 +90,100 @@ void test_movwf_should_throw_an_exception_if_operand2_is_F(){
 	Try{
 		movwf(&code);
 	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND2, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0x00,FSR[code.operand1]);
+}
+
+void test_movwf_should_throw_an_exception_if_operand2_and_3_are_BANKED(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = MOVWF, .name = "movwf"},
+					 .operand1 = 0x23,
+					 .operand2 = BANKED,
+					 .operand3 = BANKED
+					};
+					
+	//Initialize WREG with value 0x45	
+	FSR[code.operand1] = 0x00;
+	FSR[WREG] = 0x45;
+	
+	Try{
+		movwf(&code);
+	}Catch(errorStatus){
 		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
 	}
 	
 	TEST_ASSERT_EQUAL_HEX8(0x00,FSR[code.operand1]);
 }
 
+void test_movwf_should_throw_an_exception_if_operand2_and_3_are_ACCESS(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = MOVWF, .name = "movwf"},
+					 .operand1 = 0x23,
+					 .operand2 = ACCESS,
+					 .operand3 = ACCESS
+					};
+					
+	//Initialize WREG with value 0x45	
+	FSR[code.operand1] = 0x00;
+	FSR[WREG] = 0x45;
+	
+	Try{
+		movwf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0x00,FSR[code.operand1]);
+}
+
+void test_movwf_should_throw_an_exception_if_operand2_and_3_are_ACCESS_and_BANKED(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = MOVWF, .name = "movwf"},
+					 .operand1 = 0x23,
+					 .operand2 = ACCESS,
+					 .operand3 = BANKED
+					};
+					
+	//Initialize WREG with value 0x45	
+	FSR[code.operand1] = 0x00;
+	FSR[WREG] = 0x45;
+	
+	Try{
+		movwf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0x00,FSR[code.operand1]);
+}
+
+void test_movwf_should_throw_an_exception_if_operand2_and_3_are_BANKED_ACCESS(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = MOVWF, .name = "movwf"},
+					 .operand1 = 0x23,
+					 .operand2 = BANKED,
+					 .operand3 = ACCESS
+					};
+					
+	//Initialize WREG with value 0x45	
+	FSR[code.operand1] = 0x00;
+	FSR[WREG] = 0x45;
+	
+	Try{
+		movwf(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND3, errorStatus);
+	}
+	
+	TEST_ASSERT_EQUAL_HEX8(0x00,FSR[code.operand1]);
+}
