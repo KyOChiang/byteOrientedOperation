@@ -7,6 +7,6 @@ extern char FSR[];
 #define BSR 0xFE0
 #define STATUS 0xFD8
 
-void movwf(Bytecode *code);
+int movwf(Bytecode *code);
 
 #endif // _MOVWF_H_
