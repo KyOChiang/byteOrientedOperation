@@ -7,6 +7,6 @@ extern char FSR[];
 #define BSR 0xFE0
 #define STATUS 0xFD8
 
-void subfwb(Bytecode *code);
+int subfwb(Bytecode *code);
 
 #endif // _SUBFWB_H_
