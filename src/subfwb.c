@@ -1,3 +1,13 @@
+/**
+ * Author: Chiang Choon Yong
+ * Email: yong931231@hotmail.com
+ * Date: 07 - 04 - 2014
+ * Project name: PIC18 simulator
+ * Programme: Microelectronic with Embedded Technology
+ * Institution: Tunku Abdul Rahman University College
+ * Copyright: GPLv3
+ */
+
 #include <stdio.h>
 #include "CException.h"
 #include "ByteCode.h"
@@ -56,7 +66,7 @@ int subfwb(Bytecode *code){
 	else if((code->operand1 >= 0xF80)&&(code->operand1 <= 0xFFF)){
 		tempStore =  FSR[WREG] - FSR[code->operand1] - Carry;
 	}
-	printf("tempStore = %d\n",tempStore);	
+	//printf("tempStore = %d\n",tempStore);	
 	//Determine what is operand2 if empty
 	if((code->operand3 == -1)||(code->operand3 == BANKED)){
 		if(code->operand2 == -1)
@@ -66,7 +76,7 @@ int subfwb(Bytecode *code){
 		if(code->operand2 == -1)
 			code->operand2 = W;
 	}
-	printf("OP2 = %d\n",code->operand2);
+	//printf("OP2 = %d\n",code->operand2);
 	
 	//Set NEGATIVE or ZERO flag based on tempStore
 	if(tempStore == 0x00)
@@ -77,7 +87,7 @@ int subfwb(Bytecode *code){
 		FSR[STATUS] = 0x00;
 	
 	code->operand1 = tempOperand;
-	printf("OP1 = %d\n",code->operand1);
+	//printf("OP1 = %d\n",code->operand1);
 	//Determine where tempStore should store
 	if((code->operand2 == F)||(code->operand2 == 1)){
 		if((code->operand1 >= 0x80)&&(code->operand1 <= 0xF7F)){
