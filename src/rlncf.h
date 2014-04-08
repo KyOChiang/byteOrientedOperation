@@ -7,6 +7,6 @@ extern char FSR[];
 #define BSR 0xFE0
 #define STATUS 0xFD8
 
-void rlncf(Bytecode *code);
+int rlncf(Bytecode *code);
 
 #endif // RLNCF_H_
