@@ -151,3 +151,59 @@ void test_subfwb_should_throw_exception_for_invalid_operand1_less_than_0(){
 	TEST_ASSERT_EQUAL_HEX8(0x50,FSR[WREG]);
 	TEST_ASSERT_EQUAL_HEX8(0xD5,code.absoluteAddress);
 }
+
+void test_subfwb_should_subtract_file_reg_and_Carry_from_WREG_if_carry_flag_is_clear_and_store_in_file_reg(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = SUBFWB, .name = "subfwb"},
+					 .operand1 = 0x69,
+					 .operand2 = F,
+					 .operand3 = ACCESS,
+					 .absoluteAddress = 0xD6
+					};
+	
+	// Carry is 1 if carry flag in STATUS register is clear
+	// 0A-05-1(Carry) = 04
+	FSR[code.operand1] = 0x05;
+	FSR[WREG] = 0x0A;
+	FSR[STATUS] = 0x00;
+	
+	Try{
+		subfwb(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1, errorStatus);
+	}
+
+	TEST_ASSERT_EQUAL_HEX8(0x04,FSR[code.operand1]);
+	TEST_ASSERT_EQUAL_HEX8(0x0A,FSR[WREG]);
+	TEST_ASSERT_EQUAL_HEX8(0xD7,code.absoluteAddress);
+}
+
+void test_subfwb_should_subtract_file_reg_and_Carry_from_WREG_if_carry_flag_is_set_and_store_in_WREG(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = SUBFWB, .name = "subfwb"},
+					 .operand1 = 0x69,
+					 .operand2 = W,
+					 .operand3 = ACCESS,
+					 .absoluteAddress = 0xA6
+					};
+	
+	// Carry is 1 if carry flag in STATUS register is clear
+	// 0A-05-1(Carry) = 04
+	FSR[code.operand1] = 0x05;
+	FSR[WREG] = 0x0A;
+	FSR[STATUS] = 0x01;
+	
+	Try{
+		subfwb(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1, errorStatus);
+	}
+
+	TEST_ASSERT_EQUAL_HEX8(0x05,FSR[code.operand1]);
+	TEST_ASSERT_EQUAL_HEX8(0x05,FSR[WREG]);
+	TEST_ASSERT_EQUAL_HEX8(0xA7,code.absoluteAddress);
+}

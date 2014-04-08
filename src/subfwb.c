@@ -31,9 +31,11 @@ int subfwb(Bytecode *code){
 		code->operand3 = code->operand3;
 		code->operand2 = -1;
 	}
+	
+	FSR[STATUS] = FSR[STATUS] & 0x01;
 	if(FSR[STATUS] == 0x01)
 		Carry = 0;
-	else
+	else if(FSR[STATUS] == 0x00)
 		Carry = 1;
 	
 	//SUBFWB operation on different range of FILE reg
