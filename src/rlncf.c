@@ -45,7 +45,7 @@ int rlncf(Bytecode *code){
 		tempRotate = 0x01;
 	else
 		tempRotate = 0x00;
-	printf("tempRotate = %d\n",tempRotate);
+		
 	//RLNCF operation on different range of FILE reg
 	if((code->operand1 >= 0x80)&&(code->operand1 <= 0xF7F)){
 		if((code->operand3 == ACCESS)||code->operand3 == 0)
@@ -67,7 +67,7 @@ int rlncf(Bytecode *code){
 		tempStore = FSR[code->operand1]<<1;
 		tempStore = tempStore + tempRotate;
 	}
-	printf("tempStore = %d\n",tempStore);	
+
 	//Determine what is operand2 if empty
 	if((code->operand3 == -1)||(code->operand3 == BANKED)){
 		if(code->operand2 == -1)
@@ -77,7 +77,7 @@ int rlncf(Bytecode *code){
 		if(code->operand2 == -1)
 			code->operand2 = W;
 	}
-	printf("OP2 = %d\n",code->operand2);
+
 	//Set NEGATIVE or ZERO flag based on tempStore
 	if(tempStore == 0x00)
 		FSR[STATUS] = 0x04;
@@ -87,7 +87,7 @@ int rlncf(Bytecode *code){
 		FSR[STATUS] = 0x00;
 	
 	code->operand1 = tempOperand;
-	printf("OP1 = %d\n",code->operand1);
+
 	//Determine where tempStore should store
 	if((code->operand2 == F)||(code->operand2 == 1)){
 		if((code->operand1 >= 0x80)&&(code->operand1 <= 0xF7F)){

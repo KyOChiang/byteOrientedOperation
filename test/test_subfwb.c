@@ -126,3 +126,28 @@ void test_subfwb_should_throw_exception_for_invalid_BSR(){
 	TEST_ASSERT_EQUAL_HEX8(0x50,FSR[WREG]);
 	TEST_ASSERT_EQUAL_HEX8(0x05,code.absoluteAddress);
 }
+
+void test_subfwb_should_throw_exception_for_invalid_operand1_less_than_0(){
+	CEXCEPTION_T errorStatus;
+	//Test fixture
+	
+	Bytecode code = {.instruction = {.mnemonic = SUBFWB, .name = "subfwb"},
+					 .operand1 = -22,
+					 .operand2 = F,
+					 .operand3 = ACCESS,
+					 .absoluteAddress = 0xD5
+					};
+	FSR[code.operand1] = 0x45;
+	FSR[WREG] = 0x50;
+	FSR[BSR] = 0x01;
+	
+	Try{
+		subfwb(&code);
+	}Catch(errorStatus){
+		TEST_ASSERT_EQUAL(ERR_INVALID_OPERAND1, errorStatus);
+	}
+
+	TEST_ASSERT_EQUAL_HEX8(0x45,FSR[code.operand1]);
+	TEST_ASSERT_EQUAL_HEX8(0x50,FSR[WREG]);
+	TEST_ASSERT_EQUAL_HEX8(0xD5,code.absoluteAddress);
+}
